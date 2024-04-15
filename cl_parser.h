@@ -9,7 +9,7 @@ namespace cl_parser
     void print_usage(void)
     {
         std::cout << "Usage:\n";
-        std::cout << "web_parser [-l <url>] [-f <folder_to_save_in>]\n";
+        std::cout << "web_parser [-l<url>] [-f<folder_to_save_in>]\n";
     }
 
     bool get_option(std::string cline, std::string opt, std::string& value)
@@ -18,7 +18,7 @@ namespace cl_parser
         if(ind == std::string::npos) {
             return false;
         }
-        value = cline.substr(ind + 3, cline.length());
+        value = cline.substr(ind + 2, cline.length());
         return true;
     }
 
