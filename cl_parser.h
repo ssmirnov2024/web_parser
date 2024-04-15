@@ -15,7 +15,7 @@ namespace cl_parser
     bool get_option(std::string cline, std::string opt, std::string& value)
     {
         auto ind = cline.find(opt);
-        if(ind == std::string::npos) {
+        if(ind != 0) {
             return false;
         }
         value = cline.substr(ind + 2, cline.length());
