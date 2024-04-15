@@ -28,3 +28,7 @@ Prerequsites:
   // Building
   % mkdir build
   % cmake --build ./build
+
+  TO-DO:
+  1. Show progress
+  2. Parse web pages in parallel
