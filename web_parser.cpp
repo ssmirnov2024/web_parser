@@ -28,12 +28,13 @@ int main(int argc, char *argv[])
     std::string save_folder("website");
     cl_parser::parse_command_line(argc, argv, main_url, save_folder);
 
-    PageLoader pageLoader(main_url);
-    SiteParserLibxml siteParser(pageLoader, save_folder);
+    SiteParserLibxml siteParser(main_url, save_folder);
 
     thread progressThread(progress);
     progressThread.detach();
 
-    siteParser.parse(main_url);
+    WebParser webParser(siteParser);
+    webParser.parse_web_site(main_url);
+
     return 0;
 }

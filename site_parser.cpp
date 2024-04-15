@@ -8,6 +8,12 @@
 
 using namespace std;
 
+
+SiteParserLibxml::SiteParserLibxml(std::string main_url, std::string save_folder): mSaveFolder(save_folder), mPageLoader(std::make_unique<PageLoader>(main_url))
+{
+
+}
+
 void SiteParserLibxml::parse(string url)
 {
     auto save_folder = get_save_folder();
@@ -30,7 +36,7 @@ void SiteParserLibxml::parse_recursive(string url, string path, unordered_map<st
 {
     string sub_path = path + url;
     pages[sub_path] = true;
-    if(url == mPageLoader.get_main_url()) {
+    if(url == mPageLoader->get_root_url()) {
         url = "index.html";
     }
     auto index = url.rfind("/");
@@ -42,8 +48,8 @@ void SiteParserLibxml::parse_recursive(string url, string path, unordered_map<st
     if(sub_dir == "") {
         sub_dir = path;
     }
-    auto full_url = mPageLoader.get_main_url() + "/" + sub_dir + url;
-    auto web_page = mPageLoader.get_request(full_url);
+    auto full_url = mPageLoader->get_root_url() + "/" + sub_dir + url;
+    auto web_page = mPageLoader->get_request(full_url);
 
     string output_folder = mSaveFolder + "/" + sub_dir;
     if(!filesystem::exists(output_folder)){
@@ -60,7 +66,7 @@ void SiteParserLibxml::parse_recursive(string url, string path, unordered_map<st
 
         xmlXPathSetContextNode(pagination_html_element, context);
         string page_link = string(reinterpret_cast<char *>(xmlGetProp(pagination_html_element, (xmlChar*) "href")));
-        if(page_link.find("../") == 0){
+        if( (page_link.find("../") == 0) || page_link.find("http") == 0){
             continue;
         }
         if(pages.find(sub_dir + page_link) != pages.end()) {
@@ -93,9 +99,13 @@ void SiteParserLibxml::get_html_elements(xmlXPathContextPtr context, string elem
                 if(pos != string::npos){
                     link = link.substr(pos + 3, link.length());
                 }
-                mPageLoader.get_save_file(mSaveFolder, link);
+                mPageLoader->get_save_file(mSaveFolder, link);
             }
         } 
     }
+}
+
+std::string SiteParserLibxml::get_root() const {
+    return mPageLoader->get_root_url();
 }
 

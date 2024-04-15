@@ -55,7 +55,7 @@ void PageLoader::get_save_file(std::string save_folder, std::string url) const
     }
 }
 
-std::string PageLoader::get_main_url() const
+std::string PageLoader::get_root_url() const
 {
     return mRootUrl;
 }
