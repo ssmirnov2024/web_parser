@@ -2,6 +2,7 @@
 #include <fstream>
 #include <string>
 #include <thread>
+#include <atomic>
 #include "libxml/HTMLparser.h"
 #include "libxml/xpath.h"
 
@@ -11,11 +12,11 @@
 
 using namespace std;
 
-void progress()
+void progress(atomic_bool& stop_thread)
 {
     string progress_str{"="};
     int count = 0;
-    while(true) {
+    while(!stop_thread) {
         cout << progress_str << endl;;
         this_thread::sleep_for(4000ms);
         progress_str += "=";
@@ -30,11 +31,12 @@ int main(int argc, char *argv[])
 
     SiteParserLibxml siteParser(main_url, save_folder);
 
-    thread progressThread(progress);
-    progressThread.detach();
+    atomic_bool stop_thread{false};
+    thread progressThread(progress, ref(stop_thread));
 
     WebParser webParser(siteParser);
     webParser.parse_web_site(main_url);
-
+    stop_thread = true;
+    progressThread.join();
     return 0;
 }
