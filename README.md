@@ -49,5 +49,25 @@ Design:
     4. WebParser
     WebParser parses a web site using a submitted subclass of base SiteParser class. In this case SiteParserLibxml
 
+Web parsed functionality
+1. Fetch a web page source code
+2. Parse the source code for images, links, scripts CSS files.
+3. Store the source code and page's elements from 2 to a local folder.
+4. Repeat for every web page under the same domain.
+5. Show some progress information
+
+Assumptions:
+1. A web site is note huge, otherwise a recution can eat up the stack.
+2. A simple structure for a command line: web_parser [-l<url>] [-f<folder_to_save_in>]
+
+Issues:
+1. Parsing for images etc. using libxml is not thread safe. Libxml needs a separate context instance.
+2. For fetching web pages using curl library a different set of APIs required.
+
+Test plan:
+1. All web pages are fetched.
+2. CSS styles are preserved and all images are displayed.
+3. Web pages are saved locally with the same folder structures as online.
+4. Command line parameters are parsed and used if presented.
 
 
